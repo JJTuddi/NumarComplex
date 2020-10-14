@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cmath>
+
+//using namespace std;
+
+class ComplexNumber {
+private:
+    double re, im;
+public:
+    ComplexNumber(double re = 0, double im = 0) {
+        this->re = re;
+        this->im = im;
+    }
+    ComplexNumber conjugate () {
+        return ComplexNumber(this->re, -this->im);
+    }
+    double sqModulus () {
+        return this->re * this->re + this->im * this->im;
+    }
+    double Modulus() {
+        return sqrt(this->sqModulus());
+    }
+    bool isZero() {
+        if (this->re == 0 and this->im == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    friend std::ostream& operator<< (std::ostream& out, ComplexNumber z);
+    friend ComplexNumber operator+ (ComplexNumber z1, ComplexNumber z2);
+    friend ComplexNumber operator- (ComplexNumber z1, ComplexNumber z2);
+    friend ComplexNumber operator* (ComplexNumber z1, ComplexNumber z2);
+    friend ComplexNumber operator/ (ComplexNumber z1, ComplexNumber z2);
+};
+
+std::ostream& operator<< (std::ostream& out, ComplexNumber z) {
+    out << z.re << "";
+    if (z.im < 0) {
+        out << "-" << -z.im;
+    } else {
+        out << "+" << z.im;
+    }
+    out << "i\n";
+    return out;
+}
+
+ComplexNumber operator+ (ComplexNumber z1, ComplexNumber z2) {
+    return ComplexNumber(z1.re + z2.re, z1.im + z2.im);
+}
+
+ComplexNumber operator- (ComplexNumber z1, ComplexNumber z2) {
+    return ComplexNumber(z1.re - z2.re, z1.im - z2.im);
+}
+
+ComplexNumber operator* (ComplexNumber z1, ComplexNumber z2) {
+    return ComplexNumber(z1.re * z2.re - z1.im * z2.im, z1.re * z2.im + z1.im * z2.re);
+}
+
+ComplexNumber operator/ (ComplexNumber z1, ComplexNumber z2) {
+    if (z2.isZero() == true) {
+        std::cout << "\nImpossible to divide by 0\n";
+        throw "Impossible to divide by 0!";
+    }
+    int sqModulus = z2.sqModulus();
+    ComplexNumber temp = z1 * z2.conjugate();
+    return ComplexNumber(temp.re/sqModulus, temp.im/sqModulus);
+}
+
+int main() {
+	ComplexNumber z1, z2(5, -1), z3(5.72, 2.1574), z4(3.069420666);
+	std::cout << z1 << z2 << z3 << z4;
+	std::cout << "z1 + z2= " << z1 + z2;
+	std::cout << "z2 + z3= " << z2 + z3;
+	std::cout << "z1/z2= " << z1/z2;
+	ComplexNumber a(1, 1), b(1, -1);
+	std::cout << "a/b= " << a/b << "a/a= " << a/a << "b/b= " << b/b;
+	std::cout << "z1 * z2= " << z1 * z2 << "z2/z1= " << z2/z1;
+	return 0;
+}
